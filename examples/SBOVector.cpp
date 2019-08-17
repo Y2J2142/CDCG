@@ -18,13 +18,15 @@ int main () {
     v.reserve(20);
     
 
-    for(int i = 0; i < 10; ++i) {
+    for(int i = 0; i < 10; ++i) 
         v.push_back(i);
-        a.push_back(B{});
-    }
     
     for(auto && i : v)
         std::cout << i << '\n';
+
+    a.push_back(B{});
+    a.push_back(B{});
+
 
 
     return 0;

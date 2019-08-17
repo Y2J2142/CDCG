@@ -1,7 +1,7 @@
 #include<cstddef>
 #include<type_traits>
 #include<algorithm>
-
+#include <cstring>
 namespace CDCG::Containers {
 
     template<typename T, std::size_t N>
@@ -47,12 +47,12 @@ namespace CDCG::Containers {
         }
 
         T& at(std::size_t index) noexcept {
-            assert(index < N, "Index out of bounds")
+            assert((index < size()) && "index out of bounds");
             return data[index];
         }
 
         const T& at(std::size_t index) const noexcept {
-            assert(index < N, "Index out of bounds")
+            assert((index < size()) && "index out of bounds");            
             return data[index];
         }
         void fill(const T& t) noexcept(noexcept(std::is_trivially_copyable_v<T>)){

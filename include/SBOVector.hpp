@@ -1,7 +1,8 @@
 #include<cstddef>
 #include<memory>
+#include <cstring>
 #include<type_traits>
-#include "Debug.hpp"
+
 
 namespace CDCG::Containers {
 
@@ -18,7 +19,7 @@ class SBOVector {
         Type* newVector = new Type[_capacity];
 
         if constexpr (std::is_trivially_copyable_v<Type>) {
-            std::memmove(newVector, _data, sizeof(Type) * _size + 1);
+            std::memcpy(newVector, _data, sizeof(Type) * _size + 1);
         }
         else {
             std::size_t i{ 0 };
@@ -36,7 +37,7 @@ class SBOVector {
 public:
 	using valueType = Type;
 
-	SBOVector() : _size(0), _capacity(BufferSize), _data(_buffer) {}
+	SBOVector() : _buffer{}, _data{_buffer}, _size{0}, _capacity{BufferSize} {}
 
 	void push_back(Type t) {
 		if (_size == _capacity) {
@@ -54,18 +55,18 @@ public:
     }
 
 	const Type& at(std::size_t i) const noexcept {
-		assert(i < _size, "Index out of bounds");
+		assert(i < size() && "Index out of bounds");
 		return _data[i];
 	}
-	Type& at(std::size_t i) {
-		assert(i < _size, "Index out of bounds");
-		return _data[i];
+	Type& at(std::size_t index) noexcept {
+		assert(index < size() && "Index out of bounds");
+		return _data[index];
 	}
-	Type& operator[](std::size_t) noexcept {
-		return _data[i];
+	Type& operator[](std::size_t index) noexcept {
+		return _data[index];
 	}
-	const Type& operator[](std::size_t) const noexcept {
-		return _data[i];
+	const Type& operator[](std::size_t index) const noexcept {
+		return _data[index];
 	}
 
 	std::size_t size() const noexcept {

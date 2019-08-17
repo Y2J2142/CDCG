@@ -4,9 +4,12 @@
 #include <cstdio>
 namespace CDCG::Utility {
 
-struct __declspec(dllexport) Debug{
-
-
+#ifdef __WIN32
+#define EXPORT __declspec(dllexport)
+#else
+#define EXPORT
+#endif
+struct EXPORT Debug {
 
     enum class Color {
         BLACK  

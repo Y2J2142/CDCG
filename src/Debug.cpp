@@ -83,7 +83,7 @@ namespace CDCG::Utility {
         return *this;
     }
     Debug& Debug::operator<<(unsigned long val) {
-		fprintf(file, " %ul ", val);
+		fprintf(file, " %lu ", val);
         return *this;
     }
     Debug& Debug::operator<<(unsigned long long val) {
