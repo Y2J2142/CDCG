@@ -1,6 +1,5 @@
 #include<cstddef>
 #include<type_traits>
-#include<cstring>
 #include<algorithm>
 
 namespace CDCG::Containers {
@@ -12,14 +11,7 @@ namespace CDCG::Containers {
         T data[N];
         
         constexpr Array() noexcept = default;
-        constexpr Array(const Array& other) noexcept(noexcept(std::is_nothrow_copy_constructible_v<T>)) {
-            std::copy(other.begin(), other.end(), this->begin());
-
-        }
-        constexpr Array& operator=(const Array& other) noexcept(noexcept(std::is_nothrow_copy_assignable_v<T>)) {
-            std::copy(other.begin(), other.end(), this->begin());
-            return this;
-        } 
+    
 
         constexpr Array(Array&&) noexcept = default;
         constexpr Array& operator=(Array&&) noexcept = default;
@@ -54,6 +46,15 @@ namespace CDCG::Containers {
             return data[index];
         }
 
+        T& at(std::size_t index) noexcept {
+            assert(index < N, "Index out of bounds")
+            return data[index];
+        }
+
+        const T& at(std::size_t index) const noexcept {
+            assert(index < N, "Index out of bounds")
+            return data[index];
+        }
         void fill(const T& t) noexcept(noexcept(std::is_trivially_copyable_v<T>)){
             if constexpr(std::is_trivially_copyable_v<T>)
                 std::memset(data, t, N);
