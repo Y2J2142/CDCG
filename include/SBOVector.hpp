@@ -39,6 +39,13 @@ public:
 
 	SBOVector() : _buffer{}, _data{_buffer}, _size{0}, _capacity{BufferSize} {}
 
+    template <typename ...Args>
+    Type& emplace_back(Args&& ... args) {
+        if(_size == _capacity)
+            grow(_capacity * 2);
+        new(_data + _size) Type{std::forward<Args>(args)...};
+        return _data[_size++];
+    }
 	void push_back(Type t) {
 		if (_size == _capacity) {
 			grow(_capacity * 2);

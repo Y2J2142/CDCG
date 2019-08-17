@@ -5,7 +5,11 @@
 struct B {
 	int t = 10;
 	B() = default;
-	B(B const&) { t++; }
+	B(B const&) { this->t += 1; }
+	B& operator=(B const&) {
+		++t;
+		return *this;
+	}
 };
 
 
@@ -18,14 +22,18 @@ int main () {
     v.reserve(20);
     
 
-    for(int i = 0; i < 10; ++i) 
+	for (int i = 0; i < 10; ++i) {
         v.push_back(i);
+		a.push_back(B{});
+	}
     
     for(auto && i : v)
         std::cout << i << '\n';
 
-    a.push_back(B{});
-    a.push_back(B{});
+    a.emplace_back();
+
+    for(auto && i : a)
+        std::cout << i.t << '\n';
 
 
 
