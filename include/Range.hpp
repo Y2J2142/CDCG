@@ -3,12 +3,12 @@
 
 namespace CDCG::Ranges {
 
-template<typename T>
-concept Rangable = std::is_arithmetic_v<T>;
+//template<typename T>
+//concept Rangable = std::is_arithmetic_v<T>;
+//
 
 
-
-    template<Rangable T>
+    template<typename T>
     class Range {
 
         struct FakeIterator {
