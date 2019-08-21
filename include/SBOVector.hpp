@@ -46,24 +46,42 @@ public:
 			other._data = other._buffer;
 		}
 		else {
-			if (std::is_trivially_copyable_v<Type>) 
+			if constexpr (std::is_trivially_copyable_v<Type>) 
 				std::memcpy(_data, other._data, sizeof(Type) * other._size);
 			else
 				for (std::size_t i{ 0 }; i < other._size; ++i)
 					new(_data + i) Type(std::move(other._data[i]));
-
-
 		}
-
-
-
-
-
 
 		other._size = 0;
 		other._capacity = BufferSize;
 
+	}
 
+	SBOVector& operator=(SBOVector&& other) noexcept {
+
+		_size = other._size;
+		_capacity = other._capacity;
+
+		if(_data != _buffer)
+			delete[] _data;
+
+		if (other._data != other._buffer) {
+			_data = other._data;
+			other._data = other._buffer;
+		}
+		else {
+			if constexpr (std::is_trivially_copyable_v<Type>)
+				std::memcpy(_data, other._data, sizeof(Type) * other._size);
+			else 
+				for(std::size_t i{0}; i < other._size; ++i)
+					new(_data + i) Type(std::move(other._data[i]));
+		}
+
+		other._size = 0;
+		other._capacity = BufferSize;
+
+		return *this;
 
 	}
 	
