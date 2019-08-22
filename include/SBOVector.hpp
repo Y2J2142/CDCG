@@ -14,25 +14,7 @@ class SBOVector {
 	std::size_t _size;
 	std::size_t _capacity;
 
-    void grow(std::size_t newSize) {
-        _capacity = newSize;
-        Type* newVector = new Type[_capacity];
-
-        if constexpr (std::is_trivially_copyable_v<Type>) {
-            std::memcpy(newVector, _data, sizeof(Type) * _size + 1);
-        }
-        else {
-            std::size_t i{ 0 };
-            while (i < _size) {
-                new(newVector + i) Type(std::move(_data[i]));
-                ++i;
-            }
-
-        }
-        if(_data != _buffer)
-            delete[] _data;
-        _data = newVector;
-    }
+    void grow(std::size_t newSize);
 
 public:
 	using valueType = Type;
@@ -41,54 +23,9 @@ public:
 
 	SBOVector() : _buffer{}, _data{_buffer}, _size{0}, _capacity{BufferSize} {}
 
-	SBOVector(SBOVector&& other) noexcept : _data{ _buffer },_size { other._size }, _capacity{ other._capacity }  {
+	SBOVector(SBOVector&& other) noexcept;
 
-		if (other._data != other._buffer) {
-			_data = other._data;
-			other._data = other._buffer;
-		}
-		else {
-			if constexpr (std::is_trivially_copyable_v<Type>) 
-				std::memcpy(_data, other._data, sizeof(Type) * other._size);
-			else
-				for (std::size_t i{ 0 }; i < other._size; ++i) 
-					new(_data + i) Type(std::move(other._data[i]));
-		}
-
-		other._size = 0;
-		other._capacity = BufferSize;
-
-	}
-
-	SBOVector& operator=(SBOVector&& other) noexcept {
-
-		_size = other._size;
-		_capacity = other._capacity;
-
-		if(_data != _buffer)
-			delete[] _data;
-
-		if (other._data != other._buffer) {
-			_data = other._data;
-			other._data = other._buffer;
-		}
-		else {
-			if constexpr (std::is_trivially_copyable_v<Type>)
-				std::memcpy(_data, other._data, sizeof(Type) * other._size);
-			else 
-				for(std::size_t i{0}; i < other._size; ++i) {
-					if constexpr (!std::is_trivially_destructible_v<Type>)
-						_data[i].~Type();
-					new(_data + i) Type(std::move(other._data[i]));
-				}
-		}
-
-		other._size = 0;
-		other._capacity = BufferSize;
-
-		return *this;
-
-	}
+	SBOVector& operator=(SBOVector&& other) noexcept;
 	
 
     template <typename ...Args>
@@ -98,6 +35,8 @@ public:
         new(_data + _size) Type{std::forward<Args>(args)...};
         return _data[_size++];
     }
+
+	
 	void push_back(Type t) {
 		if (_size == _capacity) {
 			grow(_capacity * 2);
@@ -180,5 +119,48 @@ bool SBOVector<Type, BufferSize, Allocator>::operator==(const SBOVector& other) 
 	return true;
 }
 
+template <typename Type, std::size_t BufferSize, typename Allocator>
+SBOVector<Type, BufferSize, Allocator>::SBOVector(SBOVector&& other) noexcept : _data{ _buffer },_size { other._size }, _capacity{ other._capacity }  {
 
+		if (other._data != other._buffer) {
+			_data = other._data;
+			other._data = other._buffer;
+		}
+		else {
+			if constexpr (std::is_trivially_copyable_v<Type>) 
+				std::memcpy(_data, other._data, sizeof(Type) * other._size);
+			else
+				for (std::size_t i{ 0 }; i < other._size; ++i) 
+					new(_data + i) Type(std::move(other._data[i]));
+		}
+
+		other._size = 0;
+		other._capacity = BufferSize;
+
+	}
+
+template <typename Type, std::size_t BufferSize, typename Allocator>
+void
+SBOVector<Type, BufferSize, Allocator>::grow(std::size_t newSize)
+{
+    _capacity = newSize;
+    Type* newVector = new Type[_capacity];
+
+    if constexpr (std::is_trivially_copyable_v<Type>) {
+        std::memcpy(newVector, _data, sizeof(Type) * _size + 1);
+    }
+    else {
+        std::size_t i{ 0 };
+        while (i < _size) {
+            new(newVector + i) Type(std::move(_data[i]));
+            ++i;
+        }
+
+    }
+    if(_data != _buffer)
+        delete[] _data;
+    _data = newVector;
 }
+	
+}
+
