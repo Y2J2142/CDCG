@@ -49,7 +49,7 @@ public:
 			if constexpr (std::is_trivially_copyable_v<Type>) 
 				std::memcpy(_data, other._data, sizeof(Type) * other._size);
 			else
-				for (std::size_t i{ 0 }; i < other._size; ++i)
+				for (std::size_t i{ 0 }; i < other._size; ++i) 
 					new(_data + i) Type(std::move(other._data[i]));
 		}
 
@@ -74,8 +74,11 @@ public:
 			if constexpr (std::is_trivially_copyable_v<Type>)
 				std::memcpy(_data, other._data, sizeof(Type) * other._size);
 			else 
-				for(std::size_t i{0}; i < other._size; ++i)
+				for(std::size_t i{0}; i < other._size; ++i) {
+					if constexpr (!std::is_trivially_destructible_v<Type>)
+						_data[i].~Type();
 					new(_data + i) Type(std::move(other._data[i]));
+				}
 		}
 
 		other._size = 0;
