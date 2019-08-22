@@ -37,6 +37,8 @@ class SBOVector {
 public:
 	using valueType = Type;
 
+	bool operator==(const SBOVector& other) const noexcept;
+
 	SBOVector() : _buffer{}, _data{_buffer}, _size{0}, _capacity{BufferSize} {}
 
 	SBOVector(SBOVector&& other) noexcept : _data{ _buffer },_size { other._size }, _capacity{ other._capacity }  {
@@ -164,4 +166,19 @@ public:
 
 
 };
+
+
+template <typename Type, std::size_t BufferSize, typename Allocator>
+bool SBOVector<Type, BufferSize, Allocator>::operator==(const SBOVector& other) const noexcept {
+	if(_size != other._size)
+		return false;
+	for(std::size_t i{0}; i < _size; ++i) {
+		if(_data[i] != other._data[i])
+			return false;
+	}
+
+	return true;
+}
+
+
 }
