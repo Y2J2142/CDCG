@@ -8,6 +8,8 @@ include(GNUInstallDirs)
 add_executable(Range examples/Range.cpp)
 add_executable(Array examples/Array.cpp)
 add_executable(BabyVector examples/BabyVector.cpp)
+add_executable(LazyArray examples/LazyArray.cpp)
+
 
 
 add_library(Utility SHARED src/Debug.cpp include/Debug.hpp) 
@@ -28,6 +30,11 @@ target_compile_options(Array PRIVATE )
 target_compile_features(BabyVector PUBLIC cxx_std_17)
 target_compile_options(BabyVector PRIVATE )
 target_link_libraries(BabyVector Utility)
+
+
+target_compile_features(LazyArray PUBLIC cxx_std_17)
+target_compile_options(LazyArray PRIVATE )
+target_link_libraries(LazyArray Utility)
 
 target_compile_features(Debug PUBLIC cxx_std_17)
 target_compile_options(Debug PRIVATE )
