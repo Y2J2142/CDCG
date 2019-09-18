@@ -7,7 +7,6 @@ include(GNUInstallDirs)
 
 add_executable(Range examples/Range.cpp)
 add_executable(Array examples/Array.cpp)
-#add_executable(SBOVector examples/SBOVector.cpp)
 add_executable(BabyVector examples/BabyVector.cpp)
 
 
@@ -24,9 +23,7 @@ target_compile_options(Range PRIVATE )
 target_compile_features(Array PUBLIC cxx_std_17)
 target_compile_options(Array PRIVATE )
 
-#target_compile_features(SBOVector PUBLIC cxx_std_17)
-#target_compile_options(SBOVector PRIVATE )
-#target_link_libraries(SBOVector Utility)
+
 
 target_compile_features(BabyVector PUBLIC cxx_std_17)
 target_compile_options(BabyVector PRIVATE )
