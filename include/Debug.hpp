@@ -2,6 +2,7 @@
 #include <utility>
 #include <string_view>
 #include <cstdio>
+#include <chrono>
 namespace CDCG::Utility {
 
 #ifdef _WIN32
@@ -68,6 +69,13 @@ struct EXPORT Debug {
     Debug& operator<<(double);
     Debug& operator<<(long double);
     Debug& operator<<(void *);
+
+    Debug& operator<<(std::chrono::nanoseconds);
+    Debug& operator<<(std::chrono::microseconds);
+    Debug& operator<<(std::chrono::milliseconds);
+    Debug& operator<<(std::chrono::seconds);
+    Debug& operator<<(std::chrono::minutes);
+    Debug& operator<<(std::chrono::hours);
     
 
 

@@ -107,6 +107,32 @@ namespace CDCG::Utility {
         return *this;
     }
 
+    Debug& Debug::operator<<(std::chrono::nanoseconds duration) {
+        fprintf(file, " %llins ", std::chrono::nanoseconds(duration).count());
+        return *this;
+    }
+    Debug& Debug::operator<<(std::chrono::microseconds duration) {
+        fprintf(file, " %llius ", std::chrono::microseconds(duration).count());
+        return *this;
+    }
+    Debug& Debug::operator<<(std::chrono::milliseconds duration) {
+        fprintf(file, " %llims ", std::chrono::milliseconds(duration).count());
+        return *this;
+    }
+    Debug& Debug::operator<<(std::chrono::seconds duration) {
+        fprintf(file, " %llis ", std::chrono::seconds(duration).count());
+        return *this;
+    }
+    Debug& Debug::operator<<(std::chrono::minutes duration) {
+        fprintf(file, " %llim ", std::chrono::minutes(duration).count());
+        return *this;
+    }
+    Debug& Debug::operator<<(std::chrono::hours duration) {
+        fprintf(file, " %llih ", std::chrono::hours(duration).count());
+        return *this;
+    }
+
+
     Debug::~Debug() {
 		fprintf(file, "\u001b[0m \n");
     }
