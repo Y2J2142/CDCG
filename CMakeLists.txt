@@ -12,11 +12,14 @@ add_executable(LazyArray examples/LazyArray.cpp)
 
 
 
-add_library(Utility SHARED src/Debug.cpp include/Debug.hpp) 
+
+add_library(Utility SHARED src/Debug.cpp include/Debug.hpp src/ScopedTimer.cpp include/ScopedTimer.hpp) 
 
 add_executable(Debug examples/Debug.cpp )
 target_link_libraries(Debug Utility)
 
+add_executable(ScopedTimer examples/ScopedTimer.cpp)
+target_link_libraries(ScopedTimer Utility)
 
 target_compile_features(Range PUBLIC cxx_std_17)
 target_compile_options(Range PRIVATE )
@@ -39,7 +42,8 @@ target_link_libraries(LazyArray Utility)
 target_compile_features(Debug PUBLIC cxx_std_17)
 target_compile_options(Debug PRIVATE )
 
-
+target_compile_features(ScopedTimer PUBLIC cxx_std_17)
+target_compile_options(ScopedTimer PRIVATE )
 
 target_compile_features(Utility PUBLIC cxx_std_17)
 target_compile_options(Utility PRIVATE)
