@@ -30,6 +30,13 @@ protected:
         :   Begin{begin}, 
             Size{0},
             Capacity{capacity} {}
+    DaddyVector(const DaddyVector& other) = delete;
+    DaddyVector& operator=(const DaddyVector&) = delete;
+    DaddyVector& operator=(DaddyVector&&);
+    
+    DaddyVector(DaddyVector&& o) {
+        operator=(std::move(o));
+    }
 
     void grow(uint64_t);
     void grow() {grow(Capacity * 2); }
@@ -40,7 +47,6 @@ public:
 
 
     bool operator==(const DaddyVector& other);
-    DaddyVector& operator=(DaddyVector&&);
 
     
 

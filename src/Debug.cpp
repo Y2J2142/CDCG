@@ -4,11 +4,10 @@
 #include <cstdio>
 namespace CDCG::Utility {
 
-	Debug::Debug(Debug::DebugLevel lvl) {
+	Debug::Debug(Debug::DebugLevel lvl) : file{nullptr} {
 		switch (lvl) {
 		case DebugLevel::STANDARD:	file = stdout; break;
 		case DebugLevel::ERROR:		file = stderr; break;
-		default: file = nullptr; 
 		}
 	}
 

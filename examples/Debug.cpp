@@ -33,8 +33,7 @@ int main() {
     Debug{} << "This is true in red :" << Debug::Color::RED << true;
 	Debug{} << "This is a string_view in Yellow :" << Debug::Color::YELLOW << std::string_view("string view test");
 
-
-
+    return 0;
 
 }
 

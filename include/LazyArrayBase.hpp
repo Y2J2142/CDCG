@@ -40,6 +40,8 @@ protected:
             std::uninitialized_copy(list.begin(), list.end(), Begin );
 
     }
+    LazyArrayBase(const LazyArrayBase&) = delete;
+    LazyArrayBase& operator=(const LazyArrayBase&) = delete;
 
     ~LazyArrayBase() {
         std::destroy(Begin, End);
