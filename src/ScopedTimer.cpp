@@ -2,7 +2,7 @@
 #include "Debug.hpp"
 #include <cstdint>
 
-using CDCG::Utility::Debug;
+
 
 template<typename T>
 constexpr decltype(auto) castHelper = [](auto&& duration ) {
@@ -12,37 +12,29 @@ constexpr decltype(auto) castHelper = [](auto&& duration ) {
 
 namespace CDCG::Utility {
 
-    ScopedTimer::ScopedTimer(std::string str, Duration dur)
-        :   msg{std::move(str)},
-            duration{dur} {
-            if(!msg.empty())
-                CDCG::Utility::Debug{} << "Starting : " << msg;
-            start = std::chrono::high_resolution_clock::now();
-    }
+    ScopedTimerBase::ScopedTimerBase(std::string&& str)
+        :   msg{std::move(str)}  { 
+                Debug{} << "Starting : " << msg;
+                start = std::chrono::high_resolution_clock::now();
+            }
 
-    ScopedTimer::~ScopedTimer() {
+
+    template<typename Resolution>
+    ScopedTimer<Resolution>::ScopedTimer(std::string str)
+        :   ScopedTimerBase{std::move(str)} {}
+
+    template<typename Resolution>
+    ScopedTimer<Resolution>::~ScopedTimer() {
         auto end = std::chrono::high_resolution_clock::now();
-        switch(duration) {
-            case Duration::ns : 
-                Debug{} << msg << " took" << castHelper<std::chrono::nanoseconds>(end - start);
-                return;
-            case Duration::ms : 
-                Debug{} << msg << " took" << castHelper<std::chrono::milliseconds>(end - start);
-                return;
-            case Duration::us :
-                Debug{} << msg << " took" << castHelper<std::chrono::microseconds>(end - start);
-                return;
-            case Duration::s : 
-                Debug{} << msg << " took" << castHelper<std::chrono::seconds>(end - start);
-                return;
-            case Duration::m : 
-                Debug{} << msg << " took" << castHelper<std::chrono::minutes>(end - start);
-                return;
-            case Duration::h : 
-                Debug{} << msg << " took" << castHelper<std::chrono::hours>(end - start);
-                return;
-
-        } 
+        Debug{} << msg << " took" << castHelper<Resolution>(end - start);
     }
 
+    template struct ScopedTimer<std::chrono::nanoseconds>;
+    template struct ScopedTimer<std::chrono::milliseconds>;
+    template struct ScopedTimer<std::chrono::microseconds>;
+    template struct ScopedTimer<std::chrono::seconds>;
+    template struct ScopedTimer<std::chrono::minutes>;
+    template struct ScopedTimer<std::chrono::hours>;
+
+ 
 }

@@ -7,6 +7,8 @@ using namespace CDCG::Utility;
 
 
 int main() {
-    ScopedTimer t{"test", Duration::us};
+    ScopedTimer_ns t{"test"};
     std::this_thread::sleep_for(std::chrono::seconds(1));
+
+    "lieterals supported"_st_ns;
 }
