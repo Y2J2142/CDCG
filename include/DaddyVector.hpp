@@ -8,6 +8,8 @@
 #include <optional>
 #include <limits>
 
+namespace CDCG {
+
 
 template<typename T>
 class DaddyVector {
@@ -231,5 +233,7 @@ DaddyVector<T>& DaddyVector<T>::operator=(DaddyVector&& o) {
     setSize(oSize);
     o.clear();
     return *this;
+
+}
 
 }

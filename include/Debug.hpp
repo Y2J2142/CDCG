@@ -3,7 +3,7 @@
 #include <string_view>
 #include <cstdio>
 #include <chrono>
-namespace CDCG::Utility {
+namespace CDCG {
 
 #ifdef _WIN32
 #define EXPORT __declspec(dllexport)

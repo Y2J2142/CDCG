@@ -1,7 +1,7 @@
 #include"Array.hpp"
 
 
-using namespace CDCG::Containers;
+using namespace CDCG;
 
 
 int main() {

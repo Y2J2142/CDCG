@@ -3,7 +3,7 @@
 #include <chrono>
 
 
-using namespace CDCG::Utility;
+using namespace CDCG;
 
 
 int main() {

@@ -1,7 +1,7 @@
 #include <Range.hpp>
 #include <iostream>
 
-using namespace CDCG::Ranges;
+using namespace CDCG;
 int main(){
 
     std::cout << "Number of elements in Range 1-11 with step = 2 : " << Range<int>{1,11,2}.size() << '\n';

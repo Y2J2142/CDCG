@@ -2,7 +2,7 @@
 #include <limits>
 #include <string_view>
 
-using namespace CDCG::Utility;
+using namespace CDCG;
 
 int main() {
     Debug{} << Debug::Color::BLACK     << "BLACK";

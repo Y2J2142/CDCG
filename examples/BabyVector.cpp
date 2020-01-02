@@ -5,6 +5,7 @@
 
 struct alignas(128) dupa{};
 
+using namespace CDCG;
 
 int main() {
 

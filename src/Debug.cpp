@@ -2,7 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cstdio>
-namespace CDCG::Utility {
+namespace CDCG {
 
 	Debug::Debug(Debug::DebugLevel lvl) : file{nullptr} {
 		switch (lvl) {

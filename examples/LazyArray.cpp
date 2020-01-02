@@ -2,6 +2,8 @@
 #include <iostream>
 #include <vector>
 
+using namespace CDCG;
+
 int main() {
 
     LazyArray<int, 10> ar;

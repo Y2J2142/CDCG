@@ -1,7 +1,7 @@
 #include <type_traits>
 #include <cstddef>
 
-namespace CDCG::Ranges {
+namespace CDCG {
 
 //template<typename T>
 //concept Rangable = std::is_arithmetic_v<T>;

@@ -1,6 +1,7 @@
 #pragma once
 #include "DaddyVector.hpp"
 
+namespace CDCG {
 
 
 
@@ -21,3 +22,4 @@ class BabyVector : public  DaddyVector<T> {
 };
 
 
+}

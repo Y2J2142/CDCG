@@ -6,6 +6,9 @@
 #include <assert.h>
 #include <initializer_list>
 
+namespace CDCG {
+
+
 template<typename T>
 struct LazyArrayBase {
 
@@ -132,3 +135,4 @@ const T& LazyArrayBase<T>::at(LazyArrayBase<T>::SizeType idx) const noexcept {
 
 
 
+}

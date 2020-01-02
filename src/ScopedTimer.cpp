@@ -3,14 +3,13 @@
 #include <cstdint>
 
 
+namespace CDCG {
 
 template<typename T>
 constexpr decltype(auto) castHelper = [](auto&& duration ) {
     return std::chrono::duration_cast<T>(duration );
 };
 
-
-namespace CDCG::Utility {
 
     ScopedTimerBase::ScopedTimerBase(std::string&& str)
         :   msg{std::move(str)}  { 
@@ -37,4 +36,5 @@ namespace CDCG::Utility {
     template struct ScopedTimer<std::chrono::hours>;
 
  
+
 }

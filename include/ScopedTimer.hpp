@@ -11,7 +11,7 @@
 #include<chrono>
 
 
-namespace CDCG::Utility {
+namespace CDCG {
 
     
     struct ScopedTimerBase {

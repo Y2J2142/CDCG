@@ -2,7 +2,7 @@
 #include<type_traits>
 #include<algorithm>
 #include <cstring>
-namespace CDCG::Containers {
+namespace CDCG {
 
     template<typename T, std::size_t N>
     struct Array {

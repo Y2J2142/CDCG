@@ -1,5 +1,8 @@
 #include "LazyArrayBase.hpp"
 
+namespace CDCG {
+
+
 template<typename T, std::uint64_t N>
 struct LazyArray : public LazyArrayBase<T> {
 
@@ -21,3 +24,5 @@ struct LazyArray : public LazyArrayBase<T> {
     
     
 };
+
+}
