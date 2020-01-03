@@ -109,7 +109,7 @@ template<typename T>
 void LazyArrayBase<T>::push_back(T&& t)
 noexcept(noexcept(std::is_nothrow_move_constructible_v<T>)) {
     assert(size() < Capacity && "No more space in LazyArray");
-    new(end++) T{ std::move(t) };
+    new(End++) T{ std::move(t) };
 }
 
 

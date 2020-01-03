@@ -17,8 +17,7 @@ foreach(file_path ${src})
  target_link_libraries( ${filename} Utility)
 endforeach()
 
-add_library(Catch INTERFACE)
-target_include_directories(Catch INTERFACE "catch/cath.hpp")
+find_package(Catch2 REQUIRED)
 
 enable_testing()
 foreach(file_path ${tests})
@@ -26,8 +25,10 @@ foreach(file_path ${tests})
     get_filename_component(filename ${new_name} NAME)
     add_executable( ${filename} ${file_path} )
     target_link_libraries( ${filename} Utility)
-    target_link_libraries( ${filename} Catch)
-    add_test(test ${filename})
+    target_link_libraries( ${filename} Catch2::Catch2)
+    include(CTest)
+    include(ParseAndAddCatchTests)
+    ParseAndAddCatchTests(${filename})
 endforeach()
 
 
