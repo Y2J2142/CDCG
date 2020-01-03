@@ -5,7 +5,7 @@
 #include <iterator>
 #include <assert.h>
 #include <initializer_list>
-
+#include <algorithm>
 namespace CDCG {
 
 
@@ -71,7 +71,8 @@ public:
     Ref at(SizeType) noexcept;
     ConstRef at(SizeType) const noexcept;
     void clear() noexcept(noexcept(std::is_nothrow_destructible_v<T>));
-
+    bool operator==(const LazyArrayBase&) const noexcept;
+    bool operator!=(const LazyArrayBase&) const noexcept;
     template<typename ...Args>
     Ref emplace_back(Args&& ... args) {
         new(End) T{ std::forward<Args>(args)...};
@@ -132,6 +133,19 @@ const T& LazyArrayBase<T>::at(LazyArrayBase<T>::SizeType idx) const noexcept {
     return Begin[idx];
 }
 
+
+template<typename T>
+bool LazyArrayBase<T>::operator==(const LazyArrayBase<T>& other) const noexcept {
+    if(this->size() != other.size()) return false;
+    return std::equal(this->begin(), this->end(),
+                        other.begin(), other.end());
+
+}
+
+template<typename T>
+bool LazyArrayBase<T>::operator!=(const LazyArrayBase<T>& other) const noexcept {
+    return ! this->operator==(other);
+}
 
 
 

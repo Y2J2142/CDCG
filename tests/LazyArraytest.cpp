@@ -54,6 +54,21 @@ TEST_CASE( "Clearing the array") {
 
 }
 
+TEST_CASE("Equality Compare") {
+    CDCG::LazyArray<int, 15> ar1 = {1,2,3,4,5};
+    CDCG::LazyArray<int, 5> ar2{};
+    ar2.emplace_back(1);
+    ar2.emplace_back(2);
+    ar2.emplace_back(3);
+    ar2.emplace_back(4);
+    ar2.emplace_back(5);
+
+    REQUIRE(ar1 == ar2);
+    ar1.emplace_back(3);
+    REQUIRE(ar1 != ar2);
+
+}
+
 
 int main(int argc, char* argv[])
 {
