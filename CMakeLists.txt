@@ -9,7 +9,7 @@ add_library(Utility SHARED src/Debug.cpp include/Debug.hpp src/ScopedTimer.cpp i
 file(GLOB src "examples/*.cpp")
 file(GLOB tests "tests/*.cpp")
 
-
+set(CMAKE_CXX_STANDARD 20)
 foreach(file_path ${src})
  string( REPLACE ".cpp" "" new_name ${file_path} )
  get_filename_component(filename ${new_name} NAME)
