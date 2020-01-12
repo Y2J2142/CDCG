@@ -1,14 +1,13 @@
 #include <type_traits>
 #include <cstddef>
-
 namespace CDCG {
 
-//template<typename T>
-//concept Rangable = std::is_arithmetic_v<T>;
-//
-
-
     template<typename T>
+    concept Arithmetic = std::is_arithmetic_v<T>;
+
+
+
+    template<Arithmetic T>
     class Range {
 
         struct FakeIterator {
