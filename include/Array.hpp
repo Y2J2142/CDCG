@@ -18,11 +18,11 @@ namespace CDCG {
         ~Array() = default;
     
 
-        const T* begin() const noexcept{
+        constexpr const T* begin() const noexcept{
             return data;
         } 
         
-        const T* end() const noexcept {
+        constexpr const T* end() const noexcept {
             return data + N;
         }
         
@@ -34,7 +34,7 @@ namespace CDCG {
             return data + N;
         }
 
-        std::size_t size() const noexcept {
+        constexpr std::size_t size() const noexcept {
             return N;
         }
 
@@ -42,7 +42,7 @@ namespace CDCG {
             return data[index];
         }
 
-        const T& operator[](std::size_t index) const noexcept {
+        constexpr const T& operator[](std::size_t index) const noexcept {
             return data[index];
         }
 
@@ -51,7 +51,7 @@ namespace CDCG {
             return data[index];
         }
 
-        const T& at(std::size_t index) const noexcept {
+        constexpr const T& at(std::size_t index) const noexcept {
             assert((index < size()) && "index out of bounds");            
             return data[index];
         }
@@ -64,7 +64,7 @@ namespace CDCG {
         }
 
         template<typename ...Args>
-        Array(Args&& ... args) : data{std::forward<Args>(args)...} {}
+        constexpr Array(Args&& ... args) : data{std::forward<Args>(args)...} {}
 
     };
 
