@@ -1,58 +1,59 @@
-#include <type_traits>
 #include <cstddef>
+#include <type_traits>
 namespace CDCG {
 
-    template<typename T>
-    concept Arithmetic = std::is_arithmetic_v<T>;
+template<typename T>
+concept Arithmetic = std::is_arithmetic_v<T>;
 
+template<Arithmetic T>
+class Range
+{
 
+	struct FakeIterator
+	{
+		T val;
+		T step;
+		constexpr FakeIterator& operator++()
+		{
+			val += step;
+			return *this;
+		}
+		constexpr FakeIterator operator++(int)
+		{
+			T t{ val + _step };
+			val += step;
+			return t;
+		}
 
-    template<Arithmetic T>
-    class Range {
+		constexpr T& operator*() { return val; }
 
-        struct FakeIterator {
-            T val;
-            T step;
-            constexpr FakeIterator & operator++() {
-                val += step;
-                return *this;
-            }
-            constexpr FakeIterator operator++(int) {
-                T t{val + _step};
-                val += step;
-                return t;
-            }
+		constexpr bool operator!=(const FakeIterator& other) const
+		{
+			return this->val != other.val && this->val < other.val;
+		}
+	};
 
-            constexpr T& operator *() {
-                return val;
-            }
+  public:
+	const T _begin = 0;
+	const T _end;
+	const T _step = 1;
 
-            constexpr bool operator !=(const FakeIterator& other) const {
-                return this->val != other.val && this->val < other.val;
-            }
+	constexpr Range(T begin, T end, T step = 1)
+		: _begin{ begin }
+		, _end{ end }
+		, _step{ step }
+	{}
+	constexpr Range(T end)
+		: _end{ end }
+	{}
 
-        };
-    
-    public:
+	constexpr FakeIterator begin() const
+	{
+		return FakeIterator{ _begin, _step };
+	}
 
-        const T _begin = 0;
-        const T _end;
-        const T _step = 1;
+	constexpr FakeIterator end() const { return FakeIterator{ _end, _step }; }
 
-        constexpr Range(T begin, T end, T step = 1) : _begin{begin}, _end{end}, _step{step} {}
-        constexpr Range(T end) : _end{end} {}
-
-        constexpr FakeIterator begin() const {
-            return FakeIterator{_begin, _step};
-        }
-
-        constexpr FakeIterator end() const {
-            return FakeIterator{_end, _step};
-        }
-
-        constexpr std::size_t size() const {
-            return (_end - _begin) / _step; 
-        }
-
-    };
+	constexpr std::size_t size() const { return (_end - _begin) / _step; }
+};
 }
