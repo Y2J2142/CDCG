@@ -1,7 +1,7 @@
 #include "compose.hpp"
 #include <iostream>
 int
-main(int argc, char* argv[])
+main()
 {
 	auto f = [](int i) {
 		std::cout << "F";
@@ -16,14 +16,14 @@ main(int argc, char* argv[])
 
 		return i * 4;
 	};
-	auto i = [](int i) {
+	auto j = [](int i) {
 		std::cout << "i";
 
 		return i + 5;
 	};
 
-	auto composeRight = CDCG::composeRight(f, g, h, i);
-	auto compose = CDCG::compose(f, g, h, i);
+	auto composeRight = CDCG::composeRight(f, g, h, j);
+	auto compose = CDCG::compose(f, g, h, j);
 
 	std::cout << "compose = " << compose(10) << std::endl;
 	std::cout << "composeRight = " << composeRight(10) << std::endl;

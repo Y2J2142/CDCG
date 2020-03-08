@@ -10,10 +10,10 @@ TEST_CASE("Compose usage")
 	auto f = [](int i) { return i * 2; };
 	auto g = [](int i) { return i + 3; };
 	auto h = [](int i) { return i * 4; };
-	auto i = [](int i) { return i + 5; };
+	auto j = [](int i) { return i + 5; };
 
-	auto compose = CDCG::compose(f, g, h, i);
-	REQUIRE(compose(10) == f(g(h(i(10)))));
+	auto compose = CDCG::compose(f, g, h, j);
+	REQUIRE(compose(10) == f(g(h(j(10)))));
 }
 
 TEST_CASE("ComposeRight usage")
@@ -22,10 +22,10 @@ TEST_CASE("ComposeRight usage")
 	auto f = [](int i) { return i * 2; };
 	auto g = [](int i) { return i + 3; };
 	auto h = [](int i) { return i * 4; };
-	auto i = [](int i) { return i + 5; };
+	auto j = [](int i) { return i + 5; };
 
-	auto composeRight = CDCG::composeRight(f, g, h, i);
-	REQUIRE(composeRight(10) == i(h(g(f(10)))));
+	auto composeRight = CDCG::composeRight(f, g, h, j);
+	REQUIRE(composeRight(10) == j(h(g(f(10)))));
 }
 
 int
