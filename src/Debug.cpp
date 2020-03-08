@@ -182,37 +182,37 @@ Debug::operator<<(void* val)
 Debug&
 Debug::operator<<(std::chrono::nanoseconds duration)
 {
-	fprintf(file, " %llins ", std::chrono::nanoseconds(duration).count());
+	fprintf(file, " %lins ", std::chrono::nanoseconds(duration).count());
 	return *this;
 }
 Debug&
 Debug::operator<<(std::chrono::microseconds duration)
 {
-	fprintf(file, " %llius ", std::chrono::microseconds(duration).count());
+	fprintf(file, " %lius ", std::chrono::microseconds(duration).count());
 	return *this;
 }
 Debug&
 Debug::operator<<(std::chrono::milliseconds duration)
 {
-	fprintf(file, " %llims ", std::chrono::milliseconds(duration).count());
+	fprintf(file, " %lims ", std::chrono::milliseconds(duration).count());
 	return *this;
 }
 Debug&
 Debug::operator<<(std::chrono::seconds duration)
 {
-	fprintf(file, " %llis ", std::chrono::seconds(duration).count());
+	fprintf(file, " %lis ", std::chrono::seconds(duration).count());
 	return *this;
 }
 Debug&
 Debug::operator<<(std::chrono::minutes duration)
 {
-	fprintf(file, " %llim ", std::chrono::minutes(duration).count());
+	fprintf(file, " %lim ", std::chrono::minutes(duration).count());
 	return *this;
 }
 Debug&
 Debug::operator<<(std::chrono::hours duration)
 {
-	fprintf(file, " %llih ", std::chrono::hours(duration).count());
+	fprintf(file, " %lih ", std::chrono::hours(duration).count());
 	return *this;
 }
 
