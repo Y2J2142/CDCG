@@ -29,7 +29,10 @@ class Range
 
 		constexpr bool operator!=(const FakeIterator& other) const
 		{
-			return this->val != other.val && this->val < other.val;
+			if constexpr(std::is_floating_point_v<T>)
+				return this->val < other.val;
+			else
+				return this->val != other.val && this->val < other.val;
 		}
 	};
 
@@ -54,6 +57,6 @@ class Range
 
 	constexpr FakeIterator end() const { return FakeIterator{ _end, _step }; }
 
-	constexpr std::size_t size() const { return (_end - _begin) / _step; }
+	constexpr std::size_t size() const { return static_cast<std::size_t>((_end - _begin) / _step); }
 };
 }
