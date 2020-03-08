@@ -67,6 +67,9 @@ TEST_CASE("Equality Compare")
 	REQUIRE(ar1 != ar2);
 }
 
+
+	
+	
 int
 main(int argc, char* argv[])
 {

@@ -49,8 +49,6 @@ struct LazyArrayBase
 	~LazyArrayBase() { std::destroy(Begin, End); }
 
 	void* getBuffer() const noexcept;
-	void setSize(SizeType) noexcept(
-		noexcept(std::is_nothrow_destructible_v<T>));
 
   public:
 	void push_back(const T&) noexcept(
@@ -76,6 +74,7 @@ struct LazyArrayBase
 	template<typename... Args>
 	Ref emplace_back(Args&&... args)
 	{
+		assert(size() < Capacity && "No more space in LazyArray");
 		new (End) T{ std::forward<Args>(args)... };
 		return *(End++);
 	}
@@ -85,7 +84,7 @@ template<typename T>
 void*
 LazyArrayBase<T>::getBuffer() const noexcept
 {
-	auto endOfClass = (void*)((char*)this + sizeof(*this));
+	auto endOfClass = static_cast<void*>(static_cast<char*>(this) + sizeof(*this));
 
 	std::size_t discard = std::numeric_limits<std::size_t>::max();
 	auto ptr = std::align(alignof(T), sizeof(T), endOfClass, discard);
@@ -93,14 +92,6 @@ LazyArrayBase<T>::getBuffer() const noexcept
 	return ptr;
 }
 
-template<typename T>
-void
-LazyArrayBase<T>::setSize(SizeType newSize) noexcept(
-	noexcept(std::is_nothrow_destructible_v<T>))
-{
-	std::destroy(Begin, End);
-	End = Begin;
-}
 
 template<typename T>
 void
