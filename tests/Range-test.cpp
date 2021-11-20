@@ -1,6 +1,5 @@
-#define CATCH_CONFIG_RUNNER // This tells Catch to provide a main() - only do
-							// this in one cpp file
-#include <catch2/catch.hpp>
+
+#include <catch2/catch_test_macros.hpp>
 
 #include "Range.hpp"
 #include <vector>
@@ -111,13 +110,4 @@ TEST_CASE("Iteration over floating point range")
 
 		REQUIRE(std::vector{ 0.f, 2.f, 4.f, 6.f, 8.f } == vec);
 	}
-}
-
-int
-main(int argc, char* argv[])
-{
-
-	int result = Catch::Session().run(argc, argv);
-
-	return result;
 }

@@ -114,11 +114,11 @@ template<typename T>
 void*
 DaddyVector<T>::getBuffer() const noexcept
 {
-	// Hacky as fuck so probably should be rewritten in the future
-
-	// obtaining pointer to the endof the first adress after the end of the
+	// obtaining pointer to the end of the first adress after the end of the
 	// class and casting it to void as required for std::align
-	auto endOfClass = reinterpret_cast<void*>(reinterpret_cast<char*>(const_cast<DaddyVector*>(this)) + sizeof(*this));
+	auto endOfClass = reinterpret_cast<void*>(
+		reinterpret_cast<char*>(const_cast<DaddyVector*>(this)) +
+		sizeof(*this));
 	// not needed here
 	std::size_t discard = std::numeric_limits<std::size_t>::max();
 	// obtaining a pointer to the first valid address for T object
@@ -171,13 +171,15 @@ DaddyVector<T>::push_back(const T& elem)
 }
 
 template<typename T>
-T& DaddyVector<T>::operator[](DaddyVector<T>::SizeType idx) noexcept
+T&
+DaddyVector<T>::operator[](DaddyVector<T>::SizeType idx) noexcept
 {
 	return *std::launder(reinterpret_cast<T*>(&Begin[idx]));
 }
 
 template<typename T>
-const T& DaddyVector<T>::operator[](DaddyVector<T>::SizeType idx) const noexcept
+const T&
+DaddyVector<T>::operator[](DaddyVector<T>::SizeType idx) const noexcept
 {
 	return *std::launder(reinterpret_cast<T*>(&Begin[idx]));
 }

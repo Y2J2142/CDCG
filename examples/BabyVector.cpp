@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-struct alignas(128) dupa
+struct alignas(128) Overaligned
 {};
 
 using namespace CDCG;
@@ -12,8 +12,8 @@ int
 main()
 {
 
-	BabyVector<dupa, 3> d;
-	std::cout << std::boolalpha << "dupa : " << d.isSmall() << std::endl;
+	BabyVector<Overaligned, 3> d;
+	std::cout << std::boolalpha << "Overaligned : " << d.isSmall() << std::endl;
 	d.emplace_back();
 	d.emplace_back();
 	d.emplace_back();
@@ -47,9 +47,6 @@ main()
 	std::cout << std::boolalpha << test3.isSmall() << std::endl;
 	for (auto&& i : test3)
 		std::cout << i.size() << ' ';
-
-	// std::cout <<"Alignment of vector<int> : " << alignof(decltype(test[0]))
-	// << std::endl;
 
 	BabyVector<int, 5> test;
 	test.push_back(1);

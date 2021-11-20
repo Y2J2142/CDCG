@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <initializer_list>
 #include <iterator>
+#include <limits>
 #include <memory>
 #include <type_traits>
 namespace CDCG {
@@ -84,14 +85,14 @@ template<typename T>
 void*
 LazyArrayBase<T>::getBuffer() const noexcept
 {
-	auto endOfClass = static_cast<void*>(static_cast<char*>(this) + sizeof(*this));
+	auto endOfClass =
+		static_cast<void*>(static_cast<char*>(this) + sizeof(*this));
 
-	std::size_t discard = std::numeric_limits<std::size_t>::max();
+	auto discard = std::numeric_limits<std::size_t>::max();
 	auto ptr = std::align(alignof(T), sizeof(T), endOfClass, discard);
 
 	return ptr;
 }
-
 
 template<typename T>
 void
