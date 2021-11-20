@@ -11,7 +11,7 @@
 namespace CDCG {
 
 template<typename T>
-class DaddyVector
+class SmallVectorInterface
 {
 
   public:
@@ -26,16 +26,16 @@ class DaddyVector
 	SizeType Size, Capacity;
 
   protected:
-	DaddyVector(Storage* begin, SizeType capacity)
+	SmallVectorInterface(Storage* begin, SizeType capacity)
 		: Begin{ begin }
 		, Size{ 0 }
 		, Capacity{ capacity }
 	{}
-	DaddyVector(const DaddyVector& other) = delete;
-	DaddyVector& operator=(const DaddyVector&) = delete;
-	DaddyVector& operator=(DaddyVector&&);
+	SmallVectorInterface(const SmallVectorInterface& other) = delete;
+	SmallVectorInterface& operator=(const SmallVectorInterface&) = delete;
+	SmallVectorInterface& operator=(SmallVectorInterface&&);
 
-	DaddyVector(DaddyVector&& o) { operator=(std::move(o)); }
+	SmallVectorInterface(SmallVectorInterface&& o) { operator=(std::move(o)); }
 
 	void grow(uint64_t);
 	void grow() { grow(Capacity * 2); }
@@ -48,7 +48,7 @@ class DaddyVector
 	}
 
   public:
-	bool operator==(const DaddyVector& other);
+	bool operator==(const SmallVectorInterface& other);
 
 	SizeType size() const noexcept { return Size; }
 	Iterator begin() noexcept
@@ -95,7 +95,7 @@ class DaddyVector
 		return this->operator[](Size++);
 	}
 
-	~DaddyVector()
+	~SmallVectorInterface()
 	{
 		auto valuePtr = std::launder(reinterpret_cast<T*>(Begin));
 		std::destroy(valuePtr, valuePtr + Size);
@@ -105,31 +105,31 @@ class DaddyVector
 
 template<typename T>
 bool
-DaddyVector<T>::isSmall() const noexcept
+SmallVectorInterface<T>::isSmall() const noexcept
 {
 	return getBuffer() == Begin;
 }
 
 template<typename T>
 void*
-DaddyVector<T>::getBuffer() const noexcept
+SmallVectorInterface<T>::getBuffer() const noexcept
 {
 	// obtaining pointer to the end of the first adress after the end of the
 	// class and casting it to void as required for std::align
 	auto endOfClass = reinterpret_cast<void*>(
-		reinterpret_cast<char*>(const_cast<DaddyVector*>(this)) +
+		reinterpret_cast<char*>(const_cast<SmallVectorInterface*>(this)) +
 		sizeof(*this));
 	// not needed here
 	std::size_t discard = std::numeric_limits<std::size_t>::max();
 	// obtaining a pointer to the first valid address for T object
 	auto ptr = std::align(alignof(T), sizeof(T), endOfClass, discard);
-	// checking if Begin points to the Buffer in BabyVector
+	// checking if Begin points to the Buffer in SmallVector
 	return ptr;
 }
 
 template<typename T>
 void
-DaddyVector<T>::reset()
+SmallVectorInterface<T>::reset()
 {
 	Begin = std::launder(reinterpret_cast<Storage*>(getBuffer()));
 	Size = Capacity = 0;
@@ -137,7 +137,7 @@ DaddyVector<T>::reset()
 
 template<typename T>
 void
-DaddyVector<T>::pop_back()
+SmallVectorInterface<T>::pop_back()
 {
 	end()->~T();
 	--Size;
@@ -145,7 +145,7 @@ DaddyVector<T>::pop_back()
 
 template<typename T>
 void
-DaddyVector<T>::grow(uint64_t newSize)
+SmallVectorInterface<T>::grow(uint64_t newSize)
 {
 	if (newSize <= Capacity) return;
 
@@ -163,7 +163,7 @@ DaddyVector<T>::grow(uint64_t newSize)
 
 template<typename T>
 void
-DaddyVector<T>::push_back(const T& elem)
+SmallVectorInterface<T>::push_back(const T& elem)
 {
 	if (Size == Capacity) grow();
 	new (Begin + Size) T{ elem };
@@ -172,28 +172,31 @@ DaddyVector<T>::push_back(const T& elem)
 
 template<typename T>
 T&
-DaddyVector<T>::operator[](DaddyVector<T>::SizeType idx) noexcept
+SmallVectorInterface<T>::operator[](
+	SmallVectorInterface<T>::SizeType idx) noexcept
 {
 	return *std::launder(reinterpret_cast<T*>(&Begin[idx]));
 }
 
 template<typename T>
 const T&
-DaddyVector<T>::operator[](DaddyVector<T>::SizeType idx) const noexcept
+SmallVectorInterface<T>::operator[](
+	SmallVectorInterface<T>::SizeType idx) const noexcept
 {
 	return *std::launder(reinterpret_cast<T*>(&Begin[idx]));
 }
 
 template<typename T>
 void
-DaddyVector<T>::reserve(DaddyVector<T>::SizeType newSize)
+SmallVectorInterface<T>::reserve(SmallVectorInterface<T>::SizeType newSize)
 {
 	grow(newSize);
 }
 
 template<typename T>
 std::optional<T>
-DaddyVector<T>::at(DaddyVector<T>::SizeType idx) const noexcept
+SmallVectorInterface<T>::at(
+	SmallVectorInterface<T>::SizeType idx) const noexcept
 {
 	std::optional<T> retval{};
 	if (idx < Size) retval = Begin[idx];
@@ -201,8 +204,8 @@ DaddyVector<T>::at(DaddyVector<T>::SizeType idx) const noexcept
 }
 
 template<typename T>
-DaddyVector<T>&
-DaddyVector<T>::operator=(DaddyVector&& o)
+SmallVectorInterface<T>&
+SmallVectorInterface<T>::operator=(SmallVectorInterface&& o)
 {
 	if (this == &o) return *this;
 
