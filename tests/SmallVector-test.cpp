@@ -2,7 +2,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 using namespace CDCG;
-
+template<class T, std::size_t N>
+using SV = SmallVector<T, N>;
 TEST_CASE("SmallVector construction")
 {
 	SECTION("Default construction")
@@ -51,18 +52,64 @@ TEST_CASE("SmallVector copying")
 		const SmallVector<std::string, 5> sv{ "a", "b", "c", "d", "e" };
 		SmallVector<std::string, 2> sv2{ sv };
 		REQUIRE(sv.size() == sv2.size());
-		for (int i = 0; i < sv.size(); i++)
+		for (unsigned i = 0; i < sv.size(); i++)
 			REQUIRE(sv[i] == sv2[i]);
 	}
-	SECTION("Copy construction from SmallVector with smaller buffer size")
+	SECTION("Copy construction from SmallVector of smaller buffer size")
 	{
 		const SmallVector<float, 4> sv{ 1.f, 2.f, 3.f, 4.f };
 		SmallVector<float, 5> sv2{ sv };
 		REQUIRE(sv2.isSmall());
 		REQUIRE(sv2.capacity() == 5);
 		REQUIRE(sv2.size() == sv.size());
-		for (int i = 0; i < sv.size(); i++)
+		for (unsigned i = 0; i < sv.size(); i++)
 			REQUIRE(sv[i] == sv2[i]);
+	}
+}
+TEST_CASE("SmallVector moving")
+{
+	SECTION("Move construction")
+	{
+		SV<int, 2> sv{ 1, 2 };
+		auto sv2{ std::move(sv) };
+		REQUIRE(sv.isSmall());
+		REQUIRE(sv2.size() == 2);
+		REQUIRE(sv2.isSmall());
+		REQUIRE(sv.size() == 0);
+		REQUIRE(sv.empty());
+		REQUIRE(sv2.size() == 2);
+		REQUIRE(sv[0] == 1);
+		REQUIRE(sv[1] == 2);
+		REQUIRE(sv2[0] == 1);
+		REQUIRE(sv2[1] == 2);
+	}
+	SECTION("Move construction from SmallVector of smaller buffer size")
+	{
+		SV<int, 2> sv{ 1, 2 };
+		SV<int, 5> sv2{ std::move(sv) };
+		REQUIRE(sv.isSmall());
+		REQUIRE(sv2.size() == 2);
+		REQUIRE(sv2.isSmall());
+		REQUIRE(sv2.capacity() == 5);
+		REQUIRE(sv.empty());
+		REQUIRE(sv2.size() == 2);
+	}
+	SECTION("Move construction from SmallVector of bigger buffer size")
+	{
+		SV<int, 5> sv{ 1, 2, 3, 4, 5 };
+		SV<int, 2> sv2{ std::move(sv) };
+		REQUIRE(sv2.size() == 5);
+		REQUIRE(sv.empty());
+		REQUIRE(sv2.isSmall() == false);
+	}
+	SECTION("Move construction from non small vector")
+	{
+		SV<int, 1> sv{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+		SV<int, 3> sv2{ std::move(sv) };
+		REQUIRE(sv.isSmall());
+		REQUIRE(sv2.size() == 10);
+		REQUIRE(sv.empty());
+		REQUIRE(sv2.isSmall() == false);
 	}
 }
 TEST_CASE("SmallVector insertion")

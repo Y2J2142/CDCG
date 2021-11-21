@@ -22,6 +22,12 @@ class SmallVector : public SmallVectorInterface<T>
 	{
 		if (!other.empty()) SmallVectorInterface<T>::operator=(other);
 	}
+	SmallVector(SmallVector&& other)
+		: SmallVectorInterface<T>::SmallVectorInterface(Buffer, N)
+	{
+		if (!other.empty())
+			SmallVectorInterface<T>::operator=(::std::move(other));
+	}
 	SmallVector(const SmallVectorInterface<T>& other)
 		: SmallVectorInterface<T>::SmallVectorInterface(Buffer, N)
 	{

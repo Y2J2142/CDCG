@@ -71,7 +71,6 @@ class SmallVectorInterface
 		this->Size = other.Size;
 		return *this;
 	}
-	SmallVectorInterface(SmallVectorInterface&& o) { operator=(std::move(o)); }
 	SmallVectorInterface& operator=(SmallVectorInterface&&);
 	bool operator==(const SmallVectorInterface& other);
 
