@@ -1,4 +1,4 @@
-![Build and tests passing](https://github.com/Y2J2142/CDCG/.github/workflows/cmake.yml/badge.svg)
+[![Build and tests](https://github.com/Y2J2142/CDCG/actions/workflows/cmake.yml/badge.svg?branch=master)](https://github.com/Y2J2142/CDCG/actions/workflows/cmake.yml)
 # CDCG
 CDCG is a library containing various data structures.
 Currently I am targeting C++20 but because of the early stage of development nothing is set in stone yet.
