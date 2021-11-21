@@ -12,7 +12,21 @@ class SmallVector : public SmallVectorInterface<T>
 	SmallVector()
 		: SmallVectorInterface<T>::SmallVectorInterface(Buffer, N)
 	{}
-
+	SmallVector(std::initializer_list<T> init)
+		: SmallVectorInterface<T>::SmallVectorInterface(Buffer, N)
+	{
+		SmallVectorInterface<T>::append(init.begin(), init.end());
+	}
+	SmallVector(const SmallVector& other)
+		: SmallVectorInterface<T>::SmallVectorInterface(Buffer, N)
+	{
+		if (!other.empty()) SmallVectorInterface<T>::operator=(other);
+	}
+	SmallVector(const SmallVectorInterface<T>& other)
+		: SmallVectorInterface<T>::SmallVectorInterface(Buffer, N)
+	{
+		if (!other.empty()) SmallVectorInterface<T>::operator=(other);
+	}
 	SmallVector(SmallVectorInterface<T>&& o)
 		: SmallVectorInterface<T>::SmallVectorInterface(Buffer, N)
 	{

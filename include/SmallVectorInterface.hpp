@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <cstdlib>
-#include <cstring>
+#include <iterator>
 #include <limits>
 #include <memory>
 #include <optional>
@@ -15,7 +15,7 @@ class SmallVectorInterface
 {
 
   public:
-	using SizeType = std::uint64_t;
+	using SizeType = std::size_t;
 	using ValueType = T;
 	using Iterator = T*;
 	using ConstIterator = const T*;
@@ -31,23 +31,48 @@ class SmallVectorInterface
 		, Size{ 0 }
 		, Capacity{ capacity }
 	{}
+
 	SmallVectorInterface(const SmallVectorInterface& other) = delete;
-	SmallVectorInterface& operator=(const SmallVectorInterface&) = delete;
-	SmallVectorInterface& operator=(SmallVectorInterface&&);
 
-	SmallVectorInterface(SmallVectorInterface&& o) { operator=(std::move(o)); }
-
-	void grow(uint64_t);
+	void grow(SizeType);
 	void grow() { grow(Capacity * 2); }
 	void* getBuffer() const noexcept;
 	void setSize(SizeType n) { Size = n; }
-	void clear()
-	{
-		std::destroy(begin(), end());
-		Size = 0;
-	}
+	void clear() { reset(); }
 
   public:
+	template<std::input_iterator Iter,
+			 typename IterValueType = std::iterator_traits<Iter>::value_type>
+		requires std::is_convertible_v<IterValueType, ValueType>
+	void append(Iter first, Iter last)
+	{
+		auto count = std::distance(first, last);
+		this->reserve(this->Size + count);
+		std::uninitialized_copy(first, last, this->begin());
+		this->Size += count;
+	}
+	SmallVectorInterface& operator=(const SmallVectorInterface& other)
+	{
+		if (this->Size > other.Size) {
+			std::copy(other.begin(), other.end(), this->begin());
+			auto dist = std::distance(other.begin(), other.end());
+			std::destroy(this->begin() + dist, this->end());
+		}
+		if (this->Size == other.Size) {
+			std::copy(other.begin(), other.end(), this->begin());
+		} else {
+			this->reserve(other.Size);
+			auto dist = std::distance(this->begin(), this->end());
+			std::copy(other.begin(), other.begin() + dist, this->begin());
+			auto last_copy = std::copy_n(other.begin(), dist, this->begin());
+			std::uninitialized_copy(
+				other.begin() + dist, other.end(), last_copy);
+		}
+		this->Size = other.Size;
+		return *this;
+	}
+	SmallVectorInterface(SmallVectorInterface&& o) { operator=(std::move(o)); }
+	SmallVectorInterface& operator=(SmallVectorInterface&&);
 	bool operator==(const SmallVectorInterface& other);
 
 	SizeType size() const noexcept { return Size; }
@@ -105,6 +130,14 @@ class SmallVectorInterface
 
 template<typename T>
 bool
+SmallVectorInterface<T>::operator==(const SmallVectorInterface& other)
+{
+	if (this->Size != other.Size) return false;
+	return std::equal(this->begin(), this->end(), other->begin());
+}
+
+template<typename T>
+bool
 SmallVectorInterface<T>::isSmall() const noexcept
 {
 	return getBuffer() == Begin;
@@ -131,6 +164,7 @@ template<typename T>
 void
 SmallVectorInterface<T>::reset()
 {
+	std::destroy(this->begin(), this->end());
 	Begin = std::launder(reinterpret_cast<Storage*>(getBuffer()));
 	Size = Capacity = 0;
 }
@@ -145,7 +179,7 @@ SmallVectorInterface<T>::pop_back()
 
 template<typename T>
 void
-SmallVectorInterface<T>::grow(uint64_t newSize)
+SmallVectorInterface<T>::grow(SmallVectorInterface<T>::SizeType newSize)
 {
 	if (newSize <= Capacity) return;
 
@@ -226,7 +260,7 @@ SmallVectorInterface<T>::operator=(SmallVectorInterface&& o)
 		if (oSize) newEnd = std::move(o.begin(), o.end(), newEnd);
 
 		std::destroy(newEnd, end());
-		o.clear();
+		o.reset();
 		return *this;
 	}
 
@@ -241,7 +275,7 @@ SmallVectorInterface<T>::operator=(SmallVectorInterface&& o)
 	std::uninitialized_move(o.begin() + curSize, o.end(), begin() + curSize);
 
 	setSize(oSize);
-	o.clear();
+	o.reset();
 	return *this;
 }
 
